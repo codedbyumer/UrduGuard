@@ -2,7 +2,7 @@
 Benchmarking and Detecting Urdu-Language Jailbreak & Prompt-Injection Attacks in Multi-Agent LLM Systems
 
 **Author:** Muhammad Umer, BS Information Technology, University of Gujrat
-**Type:** Independent research project (proof-of-concept implementation of the attached proposal)
+**Type:** Independent research project 
 
 ---
 
