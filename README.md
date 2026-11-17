@@ -2,7 +2,13 @@
 Benchmarking and Detecting Urdu-Language Jailbreak & Prompt-Injection Attacks in Multi-Agent LLM Systems
 
 **Author:** Muhammad Umer, BS Information Technology, University of Gujrat
-**Type:** Independent research project 
+**Type:** Independent research project (proof-of-concept implementation of the attached proposal)
+
+> ## Correction (v2)
+> The dataset has 172 rows but **92 distinct prompts** (52 adversarial, 40 benign); each benign prompt appears three times. In the original random split, 70% of test prompts also appeared in the training set, so the near-perfect detector score reported earlier reflects memorization of repeated prompts, not generalization.
+> Re-evaluated on distinct prompts with cross-script and unseen-category tests (`src/urduguard_honest_eval.py`), attack recall fell to **0.54** (train Roman Urdu, test Urdu script), **0.85** (train Urdu script, test Roman Urdu; false-positive rate 0.20), **0.59** (unseen injection category) and **0.65** (unseen jailbreak category).
+> On the duplicate-free 122-prompt set used in UrduGuard-LLM, the same tests gave 0.45, 0.94 (false-positive rate 0.36), 0.68 and 0.76.
+> Run it yourself: `python src/urduguard_honest_eval.py` from the repository root (or use `UrduGuard_honest_eval.ipynb` in Colab).
 
 ---
 
@@ -35,11 +41,11 @@ python3 run_all.py     # consolidates everything + saves results/results_chart.p
 
 ## 2. Dataset
 
-`dataset/urdu_adversarial_dataset.csv` — 172 rows, columns: `id, text, label, category, script`
+`dataset/urdu_adversarial_dataset.csv` — 172 rows (92 distinct prompts, see the correction above), columns: `id, text, label, category, script`
 
 | label       | count |
 |-------------|-------|
-| benign      | 120   |
+| benign      | 120 (40 distinct prompts, each repeated 3 times) |
 | adversarial | 52    |
 
 Adversarial prompts are split into two categories:
@@ -112,7 +118,7 @@ executes a dangerous action (`delete_file`, `exfiltrate_data`, `send_to_third_pa
 
 ## 4. Honest limitations / what a full version would need
 
-- Dataset is small (172 rows) and template-generated — real Urdu jailbreak text (forums,
+- Dataset is small (172 rows, only 92 distinct prompts) and template-generated — real Urdu jailbreak text (forums,
   red-team logs, properly licensed translations of AdvBench-style sets) would be needed for a
   publishable benchmark, per the original proposal's Phase 1.
 - The "agents" in the pipeline are rule-based stand-ins, not real LLM calls — this environment
@@ -140,6 +146,7 @@ urduguard/
 │   ├── baseline_guardrail.py
 │   ├── train_detector.py
 │   ├── generalization_test.py
+│   ├── urduguard_honest_eval.py
 │   ├── multi_agent_pipeline.py
 │   └── run_all.py
 └── results/
